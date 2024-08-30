@@ -1,54 +1,44 @@
 import streamlit as st
-import pickle
-import numpy as np
 import pandas as pd
+import numpy as np
+from sklearn.preprocessing import MinMaxScaler, LabelEncoder
+from xgboost import XGBRegressor
+import joblib
 
-# Load model, scaler, and encoder
-model = pickle.load(open('xgboost_model.pkl', 'rb'))
-scaler = pickle.load(open('scaler (1).pkl', 'rb'))
-encoder = pickle.load(open('encoder (1).pkl', 'rb'))
+# Load the trained model and scaler
+model = joblib.load('xgb_model.pkl')
+scaler = joblib.load('scaler.pkl')
+encoder = joblib.load('encoder.pkl')
 
-# Function to preprocess user inputs
-def preprocess_inputs(experience, rating, place, profile, misc_info, num_of_qualifications):
-    data = {
-        'Experience': [experience],
-        'Rating': [rating],
-        'Place': [place],
-        'Profile': [profile],
-        'Miscellaneous_Info': [misc_info],
-        'Num_of_Qualifications': [num_of_qualifications]
-    }
-    df = pd.DataFrame(data)
-    
-    # Encode categorical variables
-    df['Place'] = encoder.transform(df['Place'])
-    df['Profile'] = encoder.transform(df['Profile'])
-    
-    # Scale features
-    df_scaled = scaler.transform(df)
-    
-    return df_scaled
-
-# Streamlit app interface
+# Streamlit app
 st.title('Doctor Consultation Fee Prediction')
 
-# User inputs
-experience = st.number_input('Years of Experience', min_value=0, max_value=66)
-rating = st.number_input('Doctor Rating', min_value=1, max_value=100)
-place = st.selectbox('Place', ['Bangalore', 'Mumbai', 'Delhi', 'Hyderabad', 'Chennai', 'Coimbatore', 'Ernakulam', 'Thiruvananthapuram', 'Other'])
+# Input fields
+experience = st.number_input('Years of Experience', min_value=0, max_value=66, value=0)
+num_of_qualifications = st.number_input('Number of Qualifications', min_value=1, max_value=10, value=1)
+rating = st.number_input('Doctor Rating', min_value=1, max_value=100, value=1)
+miscellaneous_info = st.selectbox('Miscellaneous Info Existent', ['Not Present', 'Present'])
 profile = st.selectbox('Doctor Specialization', ['Ayurveda', 'Dentist', 'Dermatologist', 'ENT Specialist', 'General Medicine', 'Homeopath'])
-misc_info = st.selectbox('Miscellaneous Info Existent', ['Not Present', 'Present'])
-num_of_qualifications = st.number_input('Number of Qualifications', min_value=1, max_value=10)
+place = st.selectbox('Place', ['Bangalore',  'Chennai', 'Coimbatore', 'Delhi', 'Ernakulam', 'Hyderabad', 'Mumbai', 'Thiruvananthapuram', 'Other'])
 
-# Preprocess and predict
-if st.button('Predict Fee'):
-    # Encode 'Place' and 'Profile' correctly
-    place_encoded = encoder.transform([place])[0]
-    profile_encoded = encoder.transform([profile])[0]
-    
-    # Preprocess inputs
-    inputs_scaled = preprocess_inputs(experience, rating, place_encoded, profile_encoded, misc_info, num_of_qualifications)
-    
-    # Make prediction
-    predicted_fee = model.predict(inputs_scaled)[0]
-    st.write(f'Predicted Fee: {predicted_fee:.2f}')
+# Encoding and scaling
+input_data = pd.DataFrame({
+    'Experience': [experience],
+    'Rating': [rating],
+    'Place': [place],
+    'Profile': [profile],
+    'Miscellaneous_Info': [miscellaneous_info],
+    'Num_of_Qualifications': [num_of_qualifications],
+    'Fee_category': [0.0]  # Default value for Fee_category
+})
+
+# Transform data
+input_data['Experience'] = np.sqrt(input_data['Experience'])
+input_data = pd.get_dummies(input_data, columns=['Place', 'Profile', 'Miscellaneous_Info'], drop_first=True)
+input_data = scaler.transform(input_data)
+
+# Predict fee
+predicted_fee = model.predict(input_data)[0]
+
+# Display result
+st.write(f'Predicted Doctor Consultation Fee: {predicted_fee:.2f}')
