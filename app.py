@@ -38,10 +38,10 @@ fee_category = fee_category_mapping[fee_category]
 input_data = pd.DataFrame({
     'Experience': [experience],
     'Rating': [rating],
-    'Num_of_Qualifications': [num_of_qualifications],
-    'Miscellaneous_Info': [miscellaneous_info],
-    'Profile': [profile],
     'Place': [place],
+    'Profile': [profile],
+    'Miscellaneous_Info': [miscellaneous_info],
+    'Num_of_Qualifications': [num_of_qualifications],
     'Fee_category': [fee_category]
 })
 
