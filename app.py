@@ -19,7 +19,7 @@ num_of_qualifications = st.number_input('Number of Qualifications', min_value=1,
 rating = st.number_input('Doctor Rating', min_value=1, max_value=100, value=1)
 miscellaneous_info = st.selectbox('Miscellaneous Info Existent', ['Not Present', 'Present'])
 profile = st.selectbox('Doctor Specialization', ['Ayurveda', 'Dentist', 'Dermatologist', 'ENT Specialist', 'General Medicine', 'Homeopath'])
-place = st.selectbox('Place', ['Bangalore',  'Chennai', 'Coimbatore', 'Delhi', 'Ernakulam', 'Hyderabad', 'Mumbai', 'Thiruvananthapuram', 'Unknown])
+place = st.selectbox('Place', ['Bangalore',  'Chennai', 'Coimbatore', 'Delhi', 'Ernakulam', 'Hyderabad', 'Mumbai', 'Thiruvananthapuram', 'Unknown'])
 
 # Create input DataFrame
 input_data = pd.DataFrame({
