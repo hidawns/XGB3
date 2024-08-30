@@ -6,9 +6,9 @@ from xgboost import XGBRegressor
 import joblib
 
 # Load the trained model and scaler
-model = joblib.load('xgb_model.pkl')
-scaler = joblib.load('scaler.pkl')
-encoder = joblib.load('encoder.pkl')
+model = joblib.load('xgboost_model.pkl')
+scaler = joblib.load('scaler (1).pkl')
+encoder = joblib.load('encoder (1).pkl')
 
 # Streamlit app
 st.title('Doctor Consultation Fee Prediction')
