@@ -14,6 +14,9 @@ st.title('Doctor Consultation Fee Prediction')
 
 # Input fields
 experience = st.number_input('Years of Experience', min_value=0, max_value=66, value=0)
+experience_funct = np.sqrt(experience)
+experience = experience_funct[experience]
+
 rating = st.number_input('Doctor Rating', min_value=1, max_value=100, value=1)
 num_of_qualifications = st.number_input('Number of Qualifications', min_value=1, max_value=10, value=1)
 
@@ -46,7 +49,7 @@ input_data = pd.DataFrame({
 })
 
 # Handle scaling
-input_data['Experience'] = np.sqrt(input_data['Experience'])
+
 input_data = scaler.transform(input_data)
 
 # Predict fee
