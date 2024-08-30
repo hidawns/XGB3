@@ -18,7 +18,7 @@ num_of_qualifications = st.number_input('Number of Qualifications', min_value=1,
 rating = st.number_input('Doctor Rating', min_value=1, max_value=100, value=1)
 
 miscellaneous_info = st.selectbox('Miscellaneous Info Existent', ['Not Present', 'Present'])
-miscellaneous_Info = 1 if miscellaneous_Info == 'Present' else 0
+miscellaneous_info = 1 if miscellaneous_info == 'Present' else 0
 
 profile = st.selectbox('Doctor Specialization', ['Ayurveda', 'Dentist', 'Dermatologist', 'ENT Specialist', 'General Medicine', 'Homeopath'])
 profile_mapping = {'Ayurveda': 0, 'Dentist': 1, 'Dermatologist': 2, 'ENT Specialist': 3, 
