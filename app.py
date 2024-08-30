@@ -19,9 +19,9 @@ num_of_qualifications = st.number_input('Number of Qualifications', min_value=1,
 rating = st.number_input('Doctor Rating', min_value=1, max_value=100, value=1)
 miscellaneous_info = st.selectbox('Miscellaneous Info Existent', ['Not Present', 'Present'])
 profile = st.selectbox('Doctor Specialization', ['Ayurveda', 'Dentist', 'Dermatologist', 'ENT Specialist', 'General Medicine', 'Homeopath'])
-place = st.selectbox('Place', ['Bangalore',  'Chennai', 'Coimbatore', 'Delhi', 'Ernakulam', 'Hyderabad', 'Mumbai', 'Thiruvananthapuram', 'Other'])
+place = st.selectbox('Place', ['Bangalore',  'Chennai', 'Coimbatore', 'Delhi', 'Ernakulam', 'Hyderabad', 'Mumbai', 'Thiruvananthapuram', 'Unknown])
 
-# Encoding and scaling
+# Create input DataFrame
 input_data = pd.DataFrame({
     'Experience': [experience],
     'Rating': [rating],
@@ -32,13 +32,17 @@ input_data = pd.DataFrame({
     'Fee_category': [0.0]  # Default value for Fee_category
 })
 
-# Transform data
+# Map categorical variables to integer values using the encoder
+input_data['Place'] = encoder.transform(input_data['Place'])
+input_data['Profile'] = encoder.transform(input_data['Profile'])
+input_data['Miscellaneous_Info'] = encoder.transform(input_data['Miscellaneous_Info'])
+
+# Handle scaling
 input_data['Experience'] = np.sqrt(input_data['Experience'])
-input_data = pd.get_dummies(input_data, columns=['Place', 'Profile', 'Miscellaneous_Info'], drop_first=True)
 input_data = scaler.transform(input_data)
 
 # Predict fee
 predicted_fee = model.predict(input_data)[0]
 
 # Display result
-st.write(f'Predicted Doctor Consultation Fee: {predicted_fee:.2f}')
+st.write(f'Predicted Doctor Consultation Fee: ${predicted_fee:.2f}')
